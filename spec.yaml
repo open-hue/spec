@@ -5,7 +5,11 @@ info:
   title: Open Hue
 servers:
   # This should be replaced by your local Bridge IP
-  - url: https://127.0.0.1/
+  - url: https://127.0.0.1
+
+tags:
+  - name: example
+    description: example
 
 security:
   - ApplicationKey: []
@@ -13,8 +17,11 @@ security:
 paths:
   /clip/v2/resource/light/{id}:
     get:
-      summary: Get a light by the uuid
-      operationId: getLightById
+      summary: Get a light by the ID
+      description: Get a light by the ID
+      tags:
+        - example
+      operationId: get_light_by_id
       security:
         - ApplicationKey: []
       parameters:
@@ -23,22 +30,28 @@ paths:
           required: true
           description: The id of the light
           schema:
-            type: string
+            $ref: "#/components/schemas/Id"
       responses:
-        200:
+        "200":
           description: Expected response to a valid request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/LightsResponse"
-        403:
+        "403":
           description: Missing or invalid application key
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error"
         default:
-          description: unexpected error
+          description: Unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorsResponse"
+
 components:
   securitySchemes:
     ApplicationKey:
@@ -46,43 +59,73 @@ components:
       in: header
       name: hue-application-key
   schemas:
+    Id:
+      type: string
+      description: The id of the resource
+      # pattern: "^[0-9a-f]{8}-([0-9a-f]{4}-){4}[0-9a-f]{12}$"
+      minLength: 0
+      maxLength: 100
     Error:
       type: object
+      description: Error object
       required:
         - description
       properties:
         description:
           type: string
+          description: The description of the error
     ErrorsResponse:
       type: object
+      description: Error response
       required:
         - errors
       properties:
         errors:
           type: array
+          description: The error objects
+          minItems: 1
+          maxItems: 100
           items:
             $ref: "#/components/schemas/Error"
+      example:
+        errors:
+          - description: "This is an error"
+          - description: "This is another error"
+    LightMetadata:
+      type: object
+      description: The metadadta for the light resource
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: The name of the light resource
     Light:
       type: object
+      description: Light object
       required:
         - id
         - metadata
       properties:
         id:
-          type: string
+          $ref: "#/components/schemas/Id"
         metadata:
-          type: object
-          required:
-            - name
-          properties:
-            name:
-              type: string
+          $ref: "#/components/schemas/LightMetadata"
     LightsResponse:
       type: object
+      description: Light response
       required:
         - data
       properties:
         data:
           type: array
+          description: Content of the response
+          minItems: 1
+          maxItems: 100
           items:
             $ref: "#/components/schemas/Light"
+      example:
+        data:
+          - id: "c73bcdcc-2669-4bf6-81d3-e4ae73fb11fd"
+            metadata:
+              name: "Foo Bulb"
