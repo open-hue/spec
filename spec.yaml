@@ -1,0 +1,88 @@
+---
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Open Hue
+servers:
+  # This should be replaced by your local Bridge IP
+  - url: https://127.0.0.1/
+
+security:
+  - ApplicationKey: []
+
+paths:
+  /clip/v2/resource/light/{id}:
+    get:
+      summary: Get a light by the uuid
+      operationId: getLightById
+      security:
+        - ApplicationKey: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the light
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LightsResponse"
+        403:
+          description: Missing or invalid application key
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorsResponse"
+components:
+  securitySchemes:
+    ApplicationKey:
+      type: apiKey
+      in: header
+      name: hue-application-key
+  schemas:
+    Error:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+    ErrorsResponse:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Error"
+    Light:
+      type: object
+      required:
+        - id
+        - metadata
+      properties:
+        id:
+          type: string
+        metadata:
+          type: object
+          required:
+            - name
+          properties:
+            name:
+              type: string
+    LightsResponse:
+      type: object
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Light"
