@@ -10,9 +10,20 @@ The specification itself serves the community not only as documentation but it c
 
 ## Local development
 
+### Directory
+
+```
+├── LICENSE   — Self-explanatory
+├── Makefile  — Aliases for internal relevant commands
+├── README.md — This document
+└── spec.yaml — OpenAPI Specification
+```
+
+### Makefile
+
 Here is a comprehensive list of available commands:
 
 ```sh
 make help     - Lists help commands
-make validate - Validates open-api spec (using docker)
+make validate - Validates OpenAPI Spec (using Docker)
 ```
