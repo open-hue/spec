@@ -5,9 +5,9 @@
 
 The specification itself serves the community not only as documentation but it can be the foundation of API clients (or SDKs) for virtually any available language via code-generation.
 
-## Why
+## Philips Hue API
 
-The specification itself serves the community not only as documentation but it can be the foundation of API clients (or SDKs) for virtually any available language via code-generation.
+The Philips Hue API has 2 main versions, "v1" and v2. Considering V2 covers almost all endpoints, unless strictly necessary, only V2 is going to be targeted by the initiative.
 
 ## Local development
 
