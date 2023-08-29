@@ -15,6 +15,33 @@ security:
   - ApplicationKey: []
 
 paths:
+  /clip/v2/resource/light:
+    get:
+      summary: Get all lights
+      description: Get all lights
+      operationId: get_lights
+      security:
+        - ApplicationKey: []
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LightsResponse"
+        "403":
+          description: Missing or invalid application key
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Error"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorsResponse"
   /clip/v2/resource/light/{id}:
     get:
       summary: Get a light by the ID
